@@ -1,20 +1,23 @@
 package bot.tymebot.components.admin;
 
 import bot.tymebot.core.UtilsUser;
-import games.negative.framework.discord.command.SlashCommand;
-import games.negative.framework.discord.command.SlashInfo;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import com.seailz.discordjv.command.annotation.SlashCommandInfo;
+import com.seailz.discordjv.command.listeners.slash.SlashCommandListener;
+import com.seailz.discordjv.events.model.interaction.command.SlashCommandInteractionEvent;
 
-@SlashInfo(name = "listguilds", description = "Lists the amount of guilds the bot is in")
-public class CommandListGuilds extends SlashCommand {
+@SlashCommandInfo(name = "listguilds", description = "Lists the amount of guilds the bot is in")
+public class CommandListGuilds extends SlashCommandListener {
 
     @Override
-    public void onCommand(SlashCommandInteractionEvent slashCommandInteractionEvent) {
-        if (!UtilsUser.isDev(slashCommandInteractionEvent.getUser().getId())) {
-            return;
-        }
-        int guilds = slashCommandInteractionEvent.getJDA().getGuilds().size();
-        slashCommandInteractionEvent.reply("I am in " + guilds + (guilds == 1 ? " guild." : " guilds.")).setEphemeral(true).queue();
+    public void onCommand(SlashCommandInteractionEvent slash) {
+        String id = slash.getInteraction().member() == null ?
+                slash.getInteraction().user().id() : slash.getInteraction()
+                .member().user().id();
 
+        if (!UtilsUser.isDev(id)) {
+            slash.reply("This command is limited.").setEphemeral(true).run();
+        }
+        int guilds = slash.getBot().getGuildCache().getCache().size();
+        slash.reply("I am in " + guilds + (guilds == 1 ? " guild." : " guilds.")).setEphemeral(true).run();
     }
 }

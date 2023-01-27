@@ -1,23 +1,26 @@
 package bot.tymebot.components.misc;
 
 import bot.tymebot.core.Utils;
-import games.negative.framework.discord.command.SlashCommand;
-import games.negative.framework.discord.command.SlashInfo;
-import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import com.seailz.discordjv.command.annotation.SlashCommandInfo;
+import com.seailz.discordjv.command.listeners.slash.SlashCommandListener;
+import com.seailz.discordjv.events.model.interaction.command.SlashCommandInteractionEvent;
+import com.seailz.discordjv.model.embed.Embeder;
 
-@SlashInfo(name = "botinfo", description = "Shows information about the bot")
-public class CommandInfo extends SlashCommand {
+import java.awt.*;
+
+@SlashCommandInfo(name = "botinfo", description = "Shows information about the bot")
+public class CommandInfo extends SlashCommandListener {
     @Override
-    public void onCommand(SlashCommandInteractionEvent slashCommandInteractionEvent) {
-        EmbedBuilder eb = new EmbedBuilder();
-        eb.setTitle("Tyme Bot Info");
-        eb.setDescription("""
+    public void onCommand(SlashCommandInteractionEvent slash) {
+        Embeder eb = Embeder.e();
+        eb.title("Tyme Bot Info");
+        eb.color(Color.decode("#2f3136"));
+        eb.description("""
                 This bot is made by the Discord.jar Team!
                 Uptime: `%uptime%`
                 Servers: `%totalguilds%`
-                """.replace("%uptime%", Utils.getUptime()).replace("%totalguilds%", String.valueOf(slashCommandInteractionEvent.getJDA().getGuilds().size())));
-        eb.setThumbnail(slashCommandInteractionEvent.getJDA().getSelfUser().getAvatarUrl());
-        slashCommandInteractionEvent.replyEmbeds(eb.build()).queue();
+                """.replace("%uptime%", Utils.getUptime()).replace("%totalguilds%", String.valueOf(slash.getBot().getGuildCache().getCache().size())));
+        eb.thumbnail(slash.getBot().getSelfUser().imageUrl());
+        slash.replyWithEmbeds(eb).run();
     }
 }

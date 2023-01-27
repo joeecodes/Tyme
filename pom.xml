@@ -51,24 +51,14 @@
         </plugins>
     </build>
 
-
     <repositories>
         <repository>
-            <id>negative-games</id>
-            <url>https://repo.negative.games/repository/maven-public/</url>
-        </repository>
-        <repository>
-            <id>dv8tion</id>
-            <name>m2-dv8tion</name>
-            <url>https://m2.dv8tion.net/releases</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
+
     <dependencies>
-        <dependency>
-            <groupId>games.negative.framework</groupId>
-            <artifactId>discord-framework</artifactId>
-            <version>1.0.0-ALPHA-4</version>
-        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -86,9 +76,9 @@
             <version>31.1-jre</version>
         </dependency>
         <dependency>
-            <groupId>net.dv8tion</groupId>
-            <artifactId>JDA</artifactId>
-            <version>5.0.0-alpha.21</version>
+            <groupId>com.github.discord-jar</groupId>
+            <artifactId>discord.jar</artifactId>
+            <version>a071f33c39</version>
         </dependency>
     </dependencies>
 </project>

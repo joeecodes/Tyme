@@ -6,30 +6,30 @@ import bot.tymebot.components.misc.CommandInfo;
 import bot.tymebot.config.TymeConfig;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import games.negative.framework.discord.DiscordBot;
+import com.seailz.discordjv.DiscordJv;
+import com.seailz.discordjv.model.application.Intent;
+import com.seailz.discordjv.model.status.Status;
+import com.seailz.discordjv.model.status.StatusType;
+import com.seailz.discordjv.model.status.activity.Activity;
+import com.seailz.discordjv.model.status.activity.ActivityType;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.JDABuilder;
-import net.dv8tion.jda.api.OnlineStatus;
-import net.dv8tion.jda.api.entities.Activity;
-import net.dv8tion.jda.api.requests.GatewayIntent;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.Writer;
-import java.util.List;
+import java.util.EnumSet;
 
 @Getter
-public class Bot extends DiscordBot {
+public class Bot {
 
     @Getter
     private static final String[] devIds = new String[]{"462296411141177364", "947691195658797167"};
 
     @Getter
     private static Bot instance;
-    private final JDA jda;
+    private final DiscordJv djv;
     private TymeConfig config = null;
 
     @Getter
@@ -58,17 +58,18 @@ public class Bot extends DiscordBot {
         }
 
         // Bot builder
-        JDABuilder builder = create(config.getBotToken(), List.of(GatewayIntent.GUILD_MEMBERS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MESSAGES, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.GUILD_PRESENCES));
+        DiscordJv djv = new DiscordJv(config.getBotToken(), EnumSet.of(
+                Intent.GUILD_MEMBERS, Intent.MESSAGE_CONTENT, Intent.GUILD_MESSAGES, Intent.DIRECT_MESSAGES, Intent.GUILD_PRESENCES
+        ));
 
-        builder.setStatus(OnlineStatus.ONLINE);
-        builder.setActivity(Activity.watching("over the server!"));
+        djv.setStatus(new Status(0, new Activity[]{
+                new Activity("over the server!", ActivityType.WATCHING)
+        }, StatusType.ONLINE, false));
 
-        registerGlobalCommand(new CommandListGuilds());
-        registerGlobalCommand(new CommandInfo());
-        registerGlobalCommand(new CommandListUsers());
-
-        jda = builder.build().awaitReady();
-        initializeCommands(jda);
+        djv.registerCommands(new CommandListGuilds());
+        djv.registerCommands(new CommandInfo());
+        djv.registerCommands(new CommandListUsers());
+        this.djv = djv;
     }
 
     @SneakyThrows
