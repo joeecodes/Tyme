@@ -2,4 +2,4 @@
 
 A new-gen Discord bot.
 
-**Moved to (GitLab)[https://gitlab.com/negative-games]**
+**Moved to [GitLab](https://www.gitlab.com/negative-games)**
